@@ -21,14 +21,14 @@ resource "aws_lb" "lb_no_logs" {
   tags = "${merge(var.tags, map("Name",var.organization))}"
 
   timeouts {
-    create = "${lookup(var.lb_timeouts, "create")}"
-    update = "${lookup(var.lb_timeouts["update"])}"
+    create = "${lookup(var.lb_timeouts["create"])}",
+    update = "${lookup(var.lb_timeouts["update"])}",
     delete = "${lookup(var.lb_timeouts["delete"])}"
   }
 }
 
 resource "aws_lb_target_group" "tg_no_log" {
-  count = "${var.create_lb ? 0 : ${var.number_target_group_create}}"
+  count = "${var.create_lb ? 0 : var.number_target_group_create}"
 
   name                 = "${lookup(var.target_groups[count.index], "name")}"
   port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
@@ -62,7 +62,7 @@ resource "aws_lb_target_group" "tg_no_log" {
     create_before_destroy = true
   }
 }
-
+/*
 resource "aws_lb_listener" "listener_http_no_logs" {
   count = "${var.create_lb ? 0 : var.number_http_listeners}"
 
@@ -75,3 +75,4 @@ resource "aws_lb_listener" "listener_http_no_logs" {
     type             = "forward"
   }
 }
+*/

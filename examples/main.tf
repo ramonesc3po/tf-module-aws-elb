@@ -10,7 +10,7 @@ data "aws_vpc" "selected" {
   }
 }
 
-data "aws_subnet" "selected" {
+data "aws_subnet_ids" "selected" {
   filter {
     name   = "tag:Name"
     values = ["*public*"]
@@ -20,6 +20,7 @@ data "aws_subnet" "selected" {
     name   = "tag:Terraform"
     values = ["true"]
   }
+  vpc_id = "${data.aws_vpc.selected.id}"
 }
 
 resource "aws_security_group" "alb_java" {
@@ -53,7 +54,7 @@ module "alb" {
 
   organization    = "zigzaga"
   security_groups = "[${aws_security_group.alb_java.id}]"
-  subnets         = "[${data.aws_subnet.selected.*.id}]"
+  subnets         = "[${data.aws_subnet_ids.selected.ids}]"
 
   vpc_id = "${data.aws_vpc.selected.id}"
 
