@@ -87,3 +87,22 @@ variable "target_group_default" {
 variable "vpc_id" {
   description = "Set vpc id"
 }
+
+
+##
+# Listener load balancer
+##
+variable "http_listeners" {
+  description = "Set use http listener, this option not use certificate"
+  default = []
+}
+
+variable "number_http_listeners" {
+  description = "Define how many http listner will create"
+  default = 0
+}
+
+variable "https_listeners" {
+  description = "Set use https listener, this option use certficate"
+  default = []
+}

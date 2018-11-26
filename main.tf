@@ -55,4 +55,23 @@ resource "aws_lb_target_group" "tg_no_log" {
   }
 
   tags = "${merge(var.tags, map("Name",lookup(var.target_groups[count.index], "name")))}"
+
+  depends_on = ["aws_lb.lb_no_logs"]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_lb_listener" "listener_http_no_logs" {
+  count = "${var.create_lb ? 0 : var.number_http_listeners}"
+
+  load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
+  port              = "${lookup(var.http_listeners[count.index], "port")}"
+  protocol          = "${lookup(var.http_listeners[count.index], "protocol")}"
+
+  "default_action" {
+    target_group_arn = "${aws_lb_target_group.tg_no_log.*.id[lookup(var.http_listeners[count.index], "target_group_index", 0)]}"
+    type             = "forward"
+  }
 }
