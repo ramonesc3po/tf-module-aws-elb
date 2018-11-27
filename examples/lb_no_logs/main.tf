@@ -20,6 +20,7 @@ data "aws_subnet_ids" "selected" {
     name   = "tag:Terraform"
     values = ["true"]
   }
+
   vpc_id = "${data.aws_vpc.selected.id}"
 }
 
@@ -50,18 +51,26 @@ resource "aws_security_group" "alb_java" {
 }
 
 module "alb" {
-  source = "../"
+  source = "../.."
 
-  organization    = "zigzaga"
+  organization    = "${var.organization}"
+  lb_tier         = "${var.tier}"
   security_groups = "[${aws_security_group.alb_java.id}]"
   subnets         = "[${data.aws_subnet_ids.selected.ids}]"
 
   vpc_id = "${data.aws_vpc.selected.id}"
 
+  number_http_listeners      = "${local.number_http_listeners}"
+  number_target_group_create = "${local.number_target_group_create}"
+
+  target_groups  = "${local.target_groups}"
+  http_listeners = "${local.http_listeners}"
+
   tags = {
     "Name"         = "zigzagaelb"
     "Terraform"    = "true"
-    "Organization" = "zigzaga"
+    "Organization" = "${var.organization}"
+    "Tier"         = "${var.tier}"
   }
 
   lb_timeouts = {
@@ -69,4 +78,29 @@ module "alb" {
     update = "20m"
     delete = "20m"
   }
+}
+
+resource "aws_lb_listener_rule" "api_cadastro" {
+  listener_arn = "${module.alb.lb_listener}"
+  priority     = 100
+
+  "action" {
+    type             = "forward"
+    order            = "1"
+    target_group_arn = "${element(module.alb.tg_arn_suffix, 1)}"
+  }
+
+  "condition" {
+    field  = "host-header"
+    values = ["api.zigzaga.com"]
+  }
+
+  "condition" {
+    field  = "path-pattern"
+    values = ["/cadastro*"]
+  }
+
+  depends_on = [
+    "module.alb"
+  ]
 }

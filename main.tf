@@ -5,7 +5,7 @@ terraform {
 resource "aws_lb" "lb_no_logs" {
   count = "${var.create_lb ? 1 : 0}"
 
-  name_prefix        = "${var.organization}"
+  name               = "${var.organization}-${var.lb_tier}"
   internal           = "${var.lb_is_internal}"
   load_balancer_type = "${var.lb_type}"
   security_groups    = ["${var.security_groups}"]
@@ -18,17 +18,17 @@ resource "aws_lb" "lb_no_logs" {
   enable_http2                     = "${var.enable_http2}"
   ip_address_type                  = "${var.ip_address_type}"
 
-  tags = "${merge(var.tags, map("Name",var.organization))}"
+  tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}"))}"
 
   timeouts {
-    create = "${lookup(var.lb_timeouts["create"])}",
-    update = "${lookup(var.lb_timeouts["update"])}",
+    create = "${lookup(var.lb_timeouts["create"])}"
+    update = "${lookup(var.lb_timeouts["update"])}"
     delete = "${lookup(var.lb_timeouts["delete"])}"
   }
 }
 
 resource "aws_lb_target_group" "tg_no_log" {
-  count = "${var.create_lb ? 0 : var.number_target_group_create}"
+  count = "${var.create_lb ? var.number_target_group_create : 0}"
 
   name                 = "${lookup(var.target_groups[count.index], "name")}"
   port                 = "${lookup(var.target_groups[count.index], "backend_port")}"
@@ -49,7 +49,7 @@ resource "aws_lb_target_group" "tg_no_log" {
     healthy_threshold   = "${lookup(var.target_groups[count.index], "health_check_healthy_threshold", lookup(local.target_group_default, "health_check_healthy_threshold"))}"
     port                = "${lookup(var.target_groups[count.index], "health_check_port")}"
     unhealthy_threshold = "${lookup(var.target_groups[count.index], "health_check_unhealthy_threshold", lookup(local.target_group_default, "health_check_unhealthy_threshold"))}"
-    timeout             = "${lookup(var.target_groups[count.index], "health_check_timout", lookup(local.target_group_default, "health_check_timeout"))}"
+    timeout             = "${lookup(var.target_groups[count.index], "health_check_timeout", lookup(local.target_group_default, "health_check_timeout"))}"
     interval            = "${lookup(var.target_groups[count.index], "health_check_interval", lookup(local.target_group_default, "health_check_interval"))}"
     matcher             = "${lookup(var.target_groups[count.index], "health_check_matcher", lookup(local.target_group_default, "health_check_matcher"))}"
   }
@@ -62,9 +62,9 @@ resource "aws_lb_target_group" "tg_no_log" {
     create_before_destroy = true
   }
 }
-/*
+
 resource "aws_lb_listener" "listener_http_no_logs" {
-  count = "${var.create_lb ? 0 : var.number_http_listeners}"
+  count = "${var.create_lb ? var.number_http_listeners : 0}"
 
   load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
   port              = "${lookup(var.http_listeners[count.index], "port")}"
@@ -75,4 +75,3 @@ resource "aws_lb_listener" "listener_http_no_logs" {
     type             = "forward"
   }
 }
-*/
