@@ -21,9 +21,9 @@ resource "aws_lb" "lb_no_logs" {
   tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}"))}"
 
   timeouts {
-    create = "${lookup(var.lb_timeouts["create"])}"
-    update = "${lookup(var.lb_timeouts["update"])}"
-    delete = "${lookup(var.lb_timeouts["delete"])}"
+    create = "${lookup(var.lb_timeouts, "create")}"
+    update = "${lookup(var.lb_timeouts, "update")}"
+    delete = "${lookup(var.lb_timeouts, "delete")}"
   }
 }
 

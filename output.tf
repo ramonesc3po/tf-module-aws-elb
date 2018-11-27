@@ -13,6 +13,10 @@ output "lb_arn_suffix" {
   value = "${element(concat(aws_lb.lb_no_logs.*.arn_suffix), 0)}"
 }
 
+output "lb_arn" {
+  value = "${element(concat(aws_lb.lb_no_logs.*.arn), 0)}"
+}
+
 output "lb_id" {
   value = "${element(concat(aws_lb.lb_no_logs.*.id), 0)}"
 }
@@ -23,6 +27,10 @@ output "lb_zone_id" {
 
 output "tg_names" {
   value = "${slice(concat(aws_lb_target_group.tg_no_log.*.name), 0, var.number_target_group_create)}"
+}
+
+output "tg_arn" {
+  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn), 0, var.number_target_group_create)}"
 }
 
 output "tg_arn_suffix" {

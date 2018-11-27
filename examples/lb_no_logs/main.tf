@@ -87,7 +87,7 @@ resource "aws_lb_listener_rule" "api_cadastro" {
   "action" {
     type             = "forward"
     order            = "1"
-    target_group_arn = "${element(module.alb.tg_arn_suffix, 1)}"
+    target_group_arn = "${element(module.alb.tg_arn, 1)}"
   }
 
   "condition" {
