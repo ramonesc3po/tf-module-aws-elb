@@ -102,11 +102,30 @@ variable "http_listeners" {
 }
 
 variable "number_http_listeners" {
-  description = "Define how many http listner will create"
+  description = "Define how many HTTP listner will be create"
+  default = 0
+}
+
+variable "number_https_listeners" {
+  description = "Define how many HTTPS listner will be create"
   default = 0
 }
 
 variable "https_listeners" {
-  description = "Set use https listener, this option use certficate"
+  description = "Set use HTTPS listener, this option use certficate"
+  default = []
+}
+
+##
+# SSL CERTIFICATE
+##
+variable "number_ssl_certs" {
+  description = "Define how many ssl certs use"
+  default = 0
+}
+
+variable "ssl_certs" {
+  description = "Set certificate arn will be use in listener"
+  type = "list"
   default = []
 }

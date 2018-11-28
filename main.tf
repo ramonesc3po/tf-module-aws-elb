@@ -63,7 +63,7 @@ resource "aws_lb_target_group" "tg_no_log" {
   }
 }
 
-resource "aws_lb_listener" "listener_http_no_logs" {
+resource "aws_lb_listener" "http_no_logs" {
   count = "${var.create_lb ? var.number_http_listeners : 0}"
 
   load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
@@ -74,4 +74,26 @@ resource "aws_lb_listener" "listener_http_no_logs" {
     target_group_arn = "${aws_lb_target_group.tg_no_log.*.id[lookup(var.http_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
+}
+
+resource "aws_lb_listener" "https_no_logs" {
+  count = "${var.create_lb ? var.number_https_listeners : 0}"
+
+  load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
+  port              = "${lookup(var.https_listeners[count.index], "port")}"
+  certificate_arn   = "${lookup(var.https_listeners[count.index], "certificate_arn")}"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-FS-2018-06"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.tg_no_log.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
+    type             = "forward"
+  }
+}
+
+resource "aws_alb_listener_certificate" "https_no_logs" {
+  count = "${var.create_lb ? var.number_ssl_certs : 0}"
+
+  certificate_arn = "${lookup(var.ssl_certs[count.index], "certificate_arn")}"
+  listener_arn    = "${aws_lb_listener.https_no_logs.*.arn[lookup(var.number_ssl_certs[count.index], "https_listener_index")]}"
 }

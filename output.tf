@@ -2,7 +2,7 @@
 # Load balancer
 ##
 output "subnets" {
-  value = "${list(concat(aws_lb.lb_no_logs.*.subnets))}"
+  value = "${aws_lb.lb_no_logs.*.subnets}"
 }
 
 output "lb_dns_name" {
@@ -38,5 +38,5 @@ output "tg_arn_suffix" {
 }
 
 output "lb_listener" {
-  value = "${element(concat(aws_lb_listener.listener_http_no_logs.*.arn), 0)}"
+  value = "${element(concat(aws_lb_listener.http_no_logs.*.arn), 0)}"
 }

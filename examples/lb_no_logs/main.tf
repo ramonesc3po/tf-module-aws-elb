@@ -50,6 +50,16 @@ resource "aws_security_group" "alb_java" {
   }
 }
 
+resource "aws_iam_server_certificate" "ssl_cert" {
+  name_prefix      = "${var.organization}-${var.tier}"
+  certificate_body = "${file("./ssl_certs/zigzaga.crt")}"
+  private_key      = "${file("./ssl_certs/zigzaga.key")}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 module "alb" {
   source = "../.."
 
@@ -60,11 +70,16 @@ module "alb" {
 
   vpc_id = "${data.aws_vpc.selected.id}"
 
+  number_https_listeners     = "${local.number_https_listeners}"
   number_http_listeners      = "${local.number_http_listeners}"
   number_target_group_create = "${local.number_target_group_create}"
 
-  target_groups  = "${local.target_groups}"
-  http_listeners = "${local.http_listeners}"
+  target_groups   = "${local.target_groups}"
+  https_listeners = "${local.https_listeners}"
+  http_listeners  = "${local.http_listeners}"
+
+  number_ssl_certs = "${local.number_ssl_certs}"
+  ssl_certs        = "${local.ssl_certs}"
 
   tags = {
     "Name"         = "zigzagaelb"
@@ -101,6 +116,6 @@ resource "aws_lb_listener_rule" "api_cadastro" {
   }
 
   depends_on = [
-    "module.alb"
+    "module.alb",
   ]
 }

@@ -23,4 +23,20 @@ locals {
                            "target_group_index", "0"
                            )
   )}"
+
+  number_https_listeners = "1"
+
+  https_listeners = "${list(
+                            map("port", 443,
+                            "target_group_index", "0"
+                            )
+  )}"
+
+  number_ssl_certs = "1"
+
+  ssl_certs = "${list(
+                      map("certificate_arn", aws_iam_server_certificate.ssl_cert.0.arn,
+                      "https_listener_index", "1"
+                      )
+  )}"
 }
