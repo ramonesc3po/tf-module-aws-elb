@@ -12,6 +12,12 @@ locals {
                           "backend_port", "80",
                           "health_check_port", "80",
                           "health_check_path", "/api/cadastro"
+                          ),
+                          map("name", "${var.organization}-ssl-cadastro-${var.tier}",
+                          "backend_protocol", "HTTP",
+                          "backend_port", "80",
+                          "health_check_port", "80",
+                          "health_check_path", "/api/cadastro"
                           )
                    )}"
 
@@ -28,7 +34,8 @@ locals {
 
   https_listeners = "${list(
                             map("port", 443,
-                            "target_group_index", "0"
+                            "target_group_index", "0",
+                            "certificate_arn", aws_iam_server_certificate.ssl_cert.0.arn
                             )
   )}"
 

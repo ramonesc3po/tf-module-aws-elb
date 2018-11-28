@@ -95,5 +95,5 @@ resource "aws_alb_listener_certificate" "https_no_logs" {
   count = "${var.create_lb ? var.number_ssl_certs : 0}"
 
   certificate_arn = "${lookup(var.ssl_certs[count.index], "certificate_arn")}"
-  listener_arn    = "${aws_lb_listener.https_no_logs.*.arn[lookup(var.number_ssl_certs[count.index], "https_listener_index")]}"
+  listener_arn    = "${aws_lb_listener.https_no_logs.*.arn[lookup(var.ssl_certs[count.index], "https_listener_index")]}"
 }

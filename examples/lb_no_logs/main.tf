@@ -65,8 +65,8 @@ module "alb" {
 
   organization    = "${var.organization}"
   lb_tier         = "${var.tier}"
-  security_groups = "[${aws_security_group.alb_java.id}]"
-  subnets         = "[${data.aws_subnet_ids.selected.ids}]"
+  security_groups = "${list(aws_security_group.alb_java.id)}"
+  subnets         = "${data.aws_subnet_ids.selected.ids}"
 
   vpc_id = "${data.aws_vpc.selected.id}"
 
@@ -96,13 +96,38 @@ module "alb" {
 }
 
 resource "aws_lb_listener_rule" "api_cadastro" {
-  listener_arn = "${module.alb.lb_listener}"
+  listener_arn = "${module.alb.lb_http_listener}"
   priority     = 100
 
   "action" {
     type             = "forward"
     order            = "1"
     target_group_arn = "${element(module.alb.tg_arn, 1)}"
+  }
+
+  "condition" {
+    field  = "host-header"
+    values = ["api.zigzaga.com"]
+  }
+
+  "condition" {
+    field  = "path-pattern"
+    values = ["/cadastro*"]
+  }
+
+  depends_on = [
+    "module.alb",
+  ]
+}
+
+resource "aws_lb_listener_rule" "api_https_cadastro" {
+  listener_arn = "${module.alb.lb_https_listener}"
+  priority     = 100
+
+  "action" {
+    type             = "forward"
+    order            = "1"
+    target_group_arn = "${element(module.alb.tg_arn, 2)}"
   }
 
   "condition" {
