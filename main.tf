@@ -18,7 +18,7 @@ resource "aws_lb" "lb_no_logs" {
   enable_http2                     = "${var.enable_http2}"
   ip_address_type                  = "${var.ip_address_type}"
 
-  tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}"))}"
+  tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}", "Terraform", "true", "Tier", "${var.lb_tier}", "Organization", "${var.organization}"))}"
 
   timeouts {
     create = "${lookup(var.lb_timeouts, "create")}"
