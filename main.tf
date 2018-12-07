@@ -54,7 +54,7 @@ resource "aws_lb_target_group" "tg_no_log" {
     matcher             = "${lookup(var.target_groups[count.index], "health_check_matcher", lookup(local.target_group_default, "health_check_matcher"))}"
   }
 
-  tags = "${merge(var.tags, map("Name",lookup(var.target_groups[count.index], "name")))}"
+  tags = "${merge(var.tags, map("Name",lookup(var.target_groups[count.index], "name"), "Terrafom", "true", "Tier", "${var.lb_tier}", "Organization", "${var.organization}"))}"
 
   depends_on = ["aws_lb.lb_no_logs"]
 
