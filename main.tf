@@ -18,7 +18,7 @@ resource "aws_lb" "lb_no_logs" {
   enable_http2                     = "${var.enable_http2}"
   ip_address_type                  = "${var.ip_address_type}"
 
-  tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}"))}"
+  tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}", "Terraform", "true", "Tier", "${var.lb_tier}", "Organization", "${var.organization}"))}"
 
   timeouts {
     create = "${lookup(var.lb_timeouts, "create")}"
@@ -47,7 +47,7 @@ resource "aws_lb_target_group" "tg_no_log" {
     path                = "${lookup(var.target_groups[count.index], "health_check_path", lookup(local.target_group_default, "health_check_path"))}"
     protocol            = "${upper(lookup(var.target_groups[count.index], "health_check_protocol", lookup(var.target_groups[count.index], "backend_protocol")))}"
     healthy_threshold   = "${lookup(var.target_groups[count.index], "health_check_healthy_threshold", lookup(local.target_group_default, "health_check_healthy_threshold"))}"
-    port                = "${lookup(var.target_groups[count.index], "health_check_port")}"
+    port                = "${lookup(var.target_groups[count.index], "health_check_port", lookup(local.target_group_default, "health_check_port"))}"
     unhealthy_threshold = "${lookup(var.target_groups[count.index], "health_check_unhealthy_threshold", lookup(local.target_group_default, "health_check_unhealthy_threshold"))}"
     timeout             = "${lookup(var.target_groups[count.index], "health_check_timeout", lookup(local.target_group_default, "health_check_timeout"))}"
     interval            = "${lookup(var.target_groups[count.index], "health_check_interval", lookup(local.target_group_default, "health_check_interval"))}"
