@@ -47,7 +47,7 @@ resource "aws_lb_target_group" "tg_no_log" {
     path                = "${lookup(var.target_groups[count.index], "health_check_path", lookup(local.target_group_default, "health_check_path"))}"
     protocol            = "${upper(lookup(var.target_groups[count.index], "health_check_protocol", lookup(var.target_groups[count.index], "backend_protocol")))}"
     healthy_threshold   = "${lookup(var.target_groups[count.index], "health_check_healthy_threshold", lookup(local.target_group_default, "health_check_healthy_threshold"))}"
-    port                = "${lookup(var.target_groups[count.index], "health_check_port")}"
+    port                = "${lookup(var.target_groups[count.index], "health_check_port", lookup(local.target_group_default, "health_check_port"))}"
     unhealthy_threshold = "${lookup(var.target_groups[count.index], "health_check_unhealthy_threshold", lookup(local.target_group_default, "health_check_unhealthy_threshold"))}"
     timeout             = "${lookup(var.target_groups[count.index], "health_check_timeout", lookup(local.target_group_default, "health_check_timeout"))}"
     interval            = "${lookup(var.target_groups[count.index], "health_check_interval", lookup(local.target_group_default, "health_check_interval"))}"
@@ -64,7 +64,7 @@ resource "aws_lb_target_group" "tg_no_log" {
 }
 
 resource "aws_lb_listener" "http_no_logs" {
-  count = "${var.create_lb ? var.number_http_listeners : 0}"
+  count = "${var.number_http_listeners}"
 
   load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
   port              = "${lookup(var.http_listeners[count.index], "port")}"
@@ -77,7 +77,7 @@ resource "aws_lb_listener" "http_no_logs" {
 }
 
 resource "aws_lb_listener" "https_no_logs" {
-  count = "${var.create_lb ? var.number_https_listeners : 0}"
+  count = "${ var.create_lb ? var.number_https_listeners : 0 }"
 
   load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
   port              = "${lookup(var.https_listeners[count.index], "port")}"

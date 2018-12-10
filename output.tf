@@ -29,6 +29,10 @@ output "tg_names" {
   value = "${slice(concat(aws_lb_target_group.tg_no_log.*.name), 0, var.number_target_group_create)}"
 }
 
+output "tg_names_arn" {
+  value = "${zipmap(aws_lb_target_group.tg_no_log.*.name, aws_lb_target_group.tg_no_log.*.arn)}"
+}
+
 output "tg_arn" {
   value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn), 0, var.number_target_group_create)}"
 }
@@ -36,11 +40,11 @@ output "tg_arn" {
 output "tg_arn_suffix" {
   value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn_suffix), 0, var.number_target_group_create)}"
 }
-
+/*
 output "lb_http_listener" {
   value = "${element(concat(aws_lb_listener.http_no_logs.*.arn), 0)}"
 }
-
+*/
 output "lb_https_listener" {
   value = "${element(concat(aws_lb_listener.https_no_logs.*.arn), 0)}"
 }
