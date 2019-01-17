@@ -87,6 +87,7 @@ resource "aws_lb_listener" "http_redirect_no_logs" {
     type = "redirect"
 
     redirect {
+      protocol    = "HTTPS"
       status_code = "${lookup(var.http_redirect_listeners[count.index], "status_code")}"
       port        = "${lookup(var.http_redirect_listeners[count.index], "redirect_port")}"
     }
