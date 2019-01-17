@@ -106,6 +106,17 @@ variable "number_http_listeners" {
   default     = 0
 }
 
+variable "http_redirect_listeners" {
+  description = "Set use http listener, this option not use certificate"
+  type        = "list"
+  default     = []
+}
+
+variable "number_http_redirect_listeners" {
+  description = "Define how many HTTP listner will be create"
+  default     = 0
+}
+
 variable "number_https_listeners" {
   description = "Define how many HTTPS listner will be create"
   default     = 0

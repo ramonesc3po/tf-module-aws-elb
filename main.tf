@@ -72,7 +72,24 @@ resource "aws_lb_listener" "http_no_logs" {
 
   "default_action" {
     target_group_arn = "${aws_lb_target_group.tg_no_log.*.id[lookup(var.http_listeners[count.index], "target_group_index", 0)]}"
-    type             = "${lookup(var.http_listeners[count.index], "type")}"
+    type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "http_redirect_no_logs" {
+  count = "${var.number_http_redirect_listeners}"
+
+  load_balancer_arn = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
+  port              = "${lookup(var.http_redirect_listeners[count.index], "port")}"
+  protocol          = "${lookup(var.http_redirect_listeners[count.index], "protocol")}"
+
+  "default_action" {
+    type = "redirect"
+
+    redirect {
+      status_code = "${lookup(var.http_redirect_listeners[count.index], "status_code")}"
+      port        = "${lookup(var.http_redirect_listeners[count.index], "redirect_port")}"
+    }
   }
 }
 
