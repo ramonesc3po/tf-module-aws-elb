@@ -42,7 +42,7 @@ output "tg_arn_suffix" {
 }
 
 output "lb_http_listener" {
-  value = "${element(concat(aws_lb_listener.http_no_logs.*.arn), 0)}"
+  value = "${element(concat(aws_lb_listener.http_no_logs.*.arn, list("")), 0)}"
 }
 
 output "lb_https_listener" {
