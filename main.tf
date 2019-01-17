@@ -72,7 +72,7 @@ resource "aws_lb_listener" "http_no_logs" {
 
   "default_action" {
     target_group_arn = "${aws_lb_target_group.tg_no_log.*.id[lookup(var.http_listeners[count.index], "target_group_index", 0)]}"
-    type             = "forward"
+    type             = "${lookup(var.http_listeners[count.index], "type")}"
   }
 }
 
