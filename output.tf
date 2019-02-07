@@ -26,7 +26,7 @@ output "lb_zone_id" {
 }
 
 output "tg_names" {
-  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.name), 0, var.number_target_group_create)}"
+  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.name, list("")), 0, var.number_target_group_create)}"
 }
 
 output "tg_names_arn" {
@@ -34,11 +34,11 @@ output "tg_names_arn" {
 }
 
 output "tg_arn" {
-  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn), 0, var.number_target_group_create)}"
+  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn, list("")), 0, var.number_target_group_create)}"
 }
 
 output "tg_arn_suffix" {
-  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn_suffix), 0, var.number_target_group_create)}"
+  value = "${slice(concat(aws_lb_target_group.tg_no_log.*.arn_suffix, list("")), 0, var.number_target_group_create)}"
 }
 /*
 output "lb_http_listener" {
