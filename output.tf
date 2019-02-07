@@ -18,7 +18,7 @@ output "lb_arn" {
 }
 
 output "lb_id" {
-  value = "${element(concat(aws_lb.lb_no_logs.*.id), 0)}"
+  value = "${element(concat(aws_lb.lb_no_logs.*.id, list("")), 0)}"
 }
 
 output "lb_zone_id" {
