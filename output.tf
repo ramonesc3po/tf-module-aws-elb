@@ -6,15 +6,15 @@ output "subnets" {
 }
 
 output "lb_dns_name" {
-  value = "${element(concat(aws_lb.lb_no_logs.*.dns_name), 0)}"
+  value = "${element(concat(aws_lb.lb_no_logs.*.dns_name, list("")), 0)}"
 }
 
 output "lb_arn_suffix" {
-  value = "${element(concat(aws_lb.lb_no_logs.*.arn_suffix), 0)}"
+  value = "${element(concat(aws_lb.lb_no_logs.*.arn_suffix, list("")), 0)}"
 }
 
 output "lb_arn" {
-  value = "${element(concat(aws_lb.lb_no_logs.*.arn), 0)}"
+  value = "${element(concat(aws_lb.lb_no_logs.*.arn, list("")), 0)}"
 }
 
 output "lb_id" {
@@ -22,7 +22,7 @@ output "lb_id" {
 }
 
 output "lb_zone_id" {
-  value = "${element(concat(aws_lb.lb_no_logs.*.zone_id), 0)}"
+  value = "${element(concat(aws_lb.lb_no_logs.*.zone_id, list("")), 0)}"
 }
 
 output "tg_names" {
@@ -47,5 +47,5 @@ output "lb_http_listener" {
 */
 
 output "lb_https_listener" {
-  value = "${element(concat(aws_lb_listener.https_no_logs.*.arn), 0)}"
+  value = "${element(concat(aws_lb_listener.https_no_logs.*.arn, list("")), 0)}"
 }
