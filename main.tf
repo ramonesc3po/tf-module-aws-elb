@@ -1,5 +1,5 @@
 terraform {
-  required_version = "<= 0.11.10"
+  required_version = "<= 0.11.13"
 }
 
 resource "aws_lb" "lb_no_logs" {
