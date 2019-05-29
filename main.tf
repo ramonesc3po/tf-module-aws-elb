@@ -2,10 +2,16 @@ terraform {
   required_version = "<= 0.11.13"
 }
 
+locals {
+  name_default_lb  = "${var.organization}-${var.lb_tier}"
+  name_elb         = "${var.lb_name}-${var.organization}-${var.lb_tier}"
+  name_compose_elb = "${var.lb_name != "" ? local.name_elb : local.name_default_lb}"
+}
+
 resource "aws_lb" "lb_no_logs" {
   count = "${var.create_lb ? 1 : 0}"
 
-  name               = "${var.organization}-${var.lb_tier}"
+  name               = "${local.name_compose_elb}"
   internal           = "${var.lb_is_internal}"
   load_balancer_type = "${var.lb_type}"
   security_groups    = ["${var.security_groups}"]
@@ -18,7 +24,7 @@ resource "aws_lb" "lb_no_logs" {
   enable_http2                     = "${var.enable_http2}"
   ip_address_type                  = "${var.ip_address_type}"
 
-  tags = "${merge(var.tags, map("Name", "${var.organization}-${var.lb_tier}", "Terraform", "true", "Tier", "${var.lb_tier}", "Organization", "${var.organization}"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_compose_elb}", "Terraform", "true", "Tier", "${var.lb_tier}", "Organization", "${var.organization}"))}"
 
   timeouts {
     create = "${lookup(var.lb_timeouts, "create")}"

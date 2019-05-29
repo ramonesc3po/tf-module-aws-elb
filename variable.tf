@@ -6,6 +6,11 @@ variable "create_lb" {
   default     = "true"
 }
 
+variable "lb_name" {
+  description = "(Optional) Set addtional name to Load Balancer"
+  default = ""
+}
+
 variable "lb_tier" {
   description = "If you want be create load balancers with environments names"
 }
