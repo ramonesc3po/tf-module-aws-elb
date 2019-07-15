@@ -13,7 +13,11 @@ locals {
     target_type                      = "instance"
   }
 
-  target_group_default = "${merge(local.target_group_default_parameters, var.target_group_default)}"
+  target_group_default = merge(
+    local.target_group_default_parameters,
+    var.target_group_default,
+  )
 
   alb_listener_rule = {}
 }
+

@@ -8,7 +8,7 @@ variable "create_lb" {
 
 variable "lb_name" {
   description = "(Optional) Set addtional name to Load Balancer"
-  default = ""
+  default     = ""
 }
 
 variable "lb_tier" {
@@ -66,7 +66,7 @@ variable "security_groups" {
 
 variable "lb_timeouts" {
   description = "Set parameters for timeouts create, update and destroy"
-  type        = "map"
+  type        = map(string)
 
   default = {
     "create" = "60m"
@@ -102,7 +102,7 @@ variable "vpc_id" {
 ##
 variable "http_listeners" {
   description = "Set use http listener, this option not use certificate"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -113,7 +113,7 @@ variable "number_http_listeners" {
 
 variable "http_redirect_listeners" {
   description = "Set use http listener, this option not use certificate"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -129,7 +129,7 @@ variable "number_https_listeners" {
 
 variable "https_listeners" {
   description = "Set use HTTPS listener, this option use certficate"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -143,6 +143,7 @@ variable "number_ssl_certs" {
 
 variable "ssl_certs" {
   description = "Set certificate arn will be use in listener"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
+
