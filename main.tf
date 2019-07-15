@@ -1,5 +1,4 @@
 terraform {
-  required_version = "<= 0.11.13"
 }
 
 locals {
@@ -76,7 +75,7 @@ resource "aws_lb_listener" "http_no_logs" {
   port              = "${lookup(var.http_listeners[count.index], "port")}"
   protocol          = "${lookup(var.http_listeners[count.index], "protocol")}"
 
-  "default_action" {
+  default_action = {
     target_group_arn = "${aws_lb_target_group.tg_no_log.*.id[lookup(var.http_listeners[count.index], "target_group_index", 0)]}"
     type             = "forward"
   }
@@ -89,10 +88,10 @@ resource "aws_lb_listener" "http_redirect_no_logs" {
   port              = "${lookup(var.http_redirect_listeners[count.index], "port")}"
   protocol          = "${lookup(var.http_redirect_listeners[count.index], "protocol")}"
 
-  "default_action" {
+  default_action = {
     type = "redirect"
 
-    redirect {
+    redirect = {
       protocol    = "HTTPS"
       status_code = "${lookup(var.http_redirect_listeners[count.index], "status_code")}"
       port        = "${lookup(var.http_redirect_listeners[count.index], "redirect_port")}"

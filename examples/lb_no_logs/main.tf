@@ -61,7 +61,7 @@ resource "aws_iam_server_certificate" "ssl_cert" {
 }
 
 module "alb" {
-  source = "../.."
+  source = "..\/..\/tf-module-aws-elb"
 
   organization    = "${var.organization}"
   lb_tier         = "${var.tier}"
